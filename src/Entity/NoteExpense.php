@@ -27,6 +27,10 @@ class NoteExpense
     #[ORM\ManyToOne(targetEntity: NoteType::class, inversedBy: 'noteExpenses')]
     private $noteType;
 
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'noteExpenses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $company;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +80,18 @@ class NoteExpense
     public function setNoteType(?NoteType $noteType): self
     {
         $this->noteType = $noteType;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
