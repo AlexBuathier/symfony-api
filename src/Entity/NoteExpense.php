@@ -24,6 +24,9 @@ class NoteExpense
     #[ORM\Column(type: 'date')]
     private $createdAt;
 
+    #[ORM\ManyToOne(targetEntity: NoteType::class, inversedBy: 'noteExpenses')]
+    private $noteType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +64,18 @@ class NoteExpense
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getNoteType(): ?NoteType
+    {
+        return $this->noteType;
+    }
+
+    public function setNoteType(?NoteType $noteType): self
+    {
+        $this->noteType = $noteType;
 
         return $this;
     }
