@@ -5,30 +5,42 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\NoteExpenseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NoteExpenseRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: ['GET', 'POST' => ["denormalization_context" => ["datetime_format" => "Y-m-d"]]],
+    itemOperations: ['GET', 'DELETE', 'PUT' => ["denormalization_context" => ["datetime_format" => "Y-m-d"]]],
+    denormalizationContext: ["groups" => ["note-expense:write"]],
+    normalizationContext: ["groups" => ["note-expense:read"]]
+)]
 class NoteExpense
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["note-expense:read", "note-expense:write"])]
     private $id;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(["note-expense:read", "note-expense:write"])]
     private $noteDate;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(["note-expense:read", "note-expense:write"])]
     private $amount;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(["note-expense:read"])]
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: NoteType::class, inversedBy: 'noteExpenses')]
+    #[Groups(["note-expense:read", "note-expense:write"])]
     private $noteType;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'noteExpenses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["note-expense:read", "note-expense:write"])]
     private $company;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'noteExpenses')]
