@@ -33,7 +33,6 @@ class NoteExpenseFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-
         for ($i = 0; $i < 10; $i++) {
             $date = new DateTime();
             $noteExpense = new NoteExpense();
@@ -45,7 +44,6 @@ class NoteExpenseFixtures extends Fixture implements DependentFixtureInterface
             $noteExpense->setCompany($this->cr->find(mt_rand(1, 4)));
             $manager->persist($noteExpense);
         }
-
         $manager->flush();
     }
 
