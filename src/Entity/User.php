@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,6 +34,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'date')]
     private $birthday;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: NoteExpense::class)]
+    private $noteExpenses;
+
+    public function __construct()
+    {
+        $this->noteExpenses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,6 +145,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBirthday(\DateTimeInterface $birthday): self
     {
         $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NoteExpense>
+     */
+    public function getNoteExpenses(): Collection
+    {
+        return $this->noteExpenses;
+    }
+
+    public function addNoteExpense(NoteExpense $noteExpense): self
+    {
+        if (!$this->noteExpenses->contains($noteExpense)) {
+            $this->noteExpenses[] = $noteExpense;
+            $noteExpense->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoteExpense(NoteExpense $noteExpense): self
+    {
+        if ($this->noteExpenses->removeElement($noteExpense)) {
+            // set the owning side to null (unless already changed)
+            if ($noteExpense->getUser() === $this) {
+                $noteExpense->setUser(null);
+            }
+        }
 
         return $this;
     }
