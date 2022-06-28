@@ -4,11 +4,10 @@
 * Symfony 5.4
 * php >=8.0
 
-### Getting started
-* Setup environment:
-    * Setup BDD in .env file in the project root (DATABASE_URL="mysql://user:password@127.0.0.1:3306/db_name?serverVersion=8.0&charset=utf8mb4")
-    * Create jwt Secret *pem with cmd: **_php bin/console lexik:jwt:generate-keypair_**
+### Getting started Setup environment:
+* Setup BDD in .env file in the project root (DATABASE_URL="mysql://user:password@127.0.0.1:3306/db_name?serverVersion=8.0&charset=utf8mb4")
 * Enter maker command:  **_make first-install_**
+* Create jwt Secret *pem with cmd: **_php bin/console lexik:jwt:generate-keypair_**
 * Open the browser and go to https://localhost:8000/
 * Et voilà !
 
