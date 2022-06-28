@@ -29,10 +29,12 @@ class AbstractEndPoint extends ApiTestCase
         if ($this->token) {
             return $this->token;
         }
-        $this->token = static::createClient()->request(
+
+        $this->token = $this->createClient()->request(
             Request::METHOD_POST,
             "/api/login_check",
             $this->options)->toArray()['token'];
+
         return $this->token;
     }
 }
