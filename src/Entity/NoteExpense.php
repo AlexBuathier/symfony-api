@@ -6,13 +6,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\NoteExpenseRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NoteExpenseRepository::class)]
 #[ApiResource(
-    collectionOperations: ['GET', 'POST' => ["denormalization_context" => ["datetime_format" => "Y-m-d"]]],
-    itemOperations: ['GET', 'DELETE', 'PUT' => ["denormalization_context" => ["datetime_format" => "Y-m-d"]]],
-    denormalizationContext: ["groups" => ["note-expense:write"]],
-    normalizationContext: ["groups" => ["note-expense:read"]]
+    collectionOperations: ['GET', 'POST'],
+    itemOperations: ['GET', 'DELETE', 'PUT'],
+    denormalizationContext: ["groups" => ["note-expense:write"],"datetime_format" => "Y-m-d"],
+    normalizationContext: ["groups" => ["note-expense:read"], "datetime_format" => "Y-m-d"]
 )]
 class NoteExpense
 {
@@ -24,10 +25,13 @@ class NoteExpense
 
     #[ORM\Column(type: 'date')]
     #[Groups(["note-expense:read", "note-expense:write"])]
+    #[Assert\Type('DateTimeInterface' , message: "La date doit être au format YYYY-MM-DD")]
     private $noteDate;
 
     #[ORM\Column(type: 'float')]
     #[Groups(["note-expense:read", "note-expense:write"])]
+    #[Assert\Positive(message: "La valeur doit être positive"),
+        Assert\NotNull(message: "La valeur doit être renseignée")]
     private $amount;
 
     #[ORM\Column(type: 'date')]
@@ -36,11 +40,13 @@ class NoteExpense
 
     #[ORM\ManyToOne(targetEntity: NoteType::class, inversedBy: 'noteExpenses')]
     #[Groups(["note-expense:read", "note-expense:write"])]
+    #[Assert\NotNull(message: "L' IRI doit être au format > /api/note-type/{id}")]
     private $noteType;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'noteExpenses')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(["note-expense:read", "note-expense:write"])]
+    #[Assert\NotNull(message: "L' IRI doit être au format > /api/companies/{id}")]
     private $company;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'noteExpenses')]
